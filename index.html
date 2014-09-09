@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"; />
+		<script src='jquery.min.js'></script>
+		<script>
+			
+			http = require('http');
+
+			function getAppStore(searchWord) {
+			  var data = '';
+  			
+        http.get("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/wa/wsSearch?entity=software&country=jp&term="+encodeURIComponent(searchWord),
+			  function(res) {
+
+			    res.on('data', function(chunk){ data += chunk; });
+			    res.on('end', function() {
+  			    var obj = JSON.parse(data);
+
+      			for (i = 0; i < 10; i++) {
+						  $("#imageZone"+i).attr("src", obj.results[i].artworkUrl60);
+              if (obj.results[i].price == "0")
+							  priceStr = "無料";
+							else
+								priceStr = obj.results[i].price+" 円";
+														
+     			    $("#resultZone"+i).html(obj.results[i].trackName+"<br />"+priceStr);
+						}
+		      //document.write(obj.resultCount);
+    			//$("#resultZone").html(data);
+
+			    //alert(obj.resultCount);
+			  });
+			
+
+			});
+			
+
+			}
+
+      function searchNow() {
+        $("img").attr("src", "");
+				$("div").html("");
+        $("#resultZone0").html("now loading...");
+        getAppStore($("#searchWord").val());
+      }
+
+
+
+
+		</script>
+	</head>
+	<body>
+		search word
+		<input type="text" id="searchWord">
+		<button onClick="searchNow();">Search</button>
+		<br />
+		<img id="imageZone0">
+		<div id="resultZone0"></div><br />
+		<img id="imageZone1">
+		<div id="resultZone1"></div><br />
+		<img id="imageZone2">
+		<div id="resultZone2"></div><br />
+		<img id="imageZone3">
+		<div id="resultZone3"></div><br />
+		<img id="imageZone4">
+		<div id="resultZone4"></div><br />
+		<img id="imageZone5">
+		<div id="resultZone5"></div><br />
+		<img id="imageZone6">
+		<div id="resultZone6"></div><br />
+		<img id="imageZone7">
+		<div id="resultZone7"></div><br />
+		<img id="imageZone8">
+		<div id="resultZone8"></div><br />
+		<img id="imageZone9">
+		<div id="resultZone9"></div>
+
+		<script>
+			$("#searchWord").keypress(function(e){
+        if (e.which == 13) {
+			    searchNow();
+			  }
+      });
+	  </script>
+	</body>
+</html>
